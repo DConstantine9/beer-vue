@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-for="(beer, i) in beerList" 
+    <div 
+      v-for="(beer, i) in beerList" 
       v-bind:key="i"
       class="beer-box"
     >
@@ -10,9 +11,12 @@
       <div>brewers tips: {{beer.brewers_tips}} </div> 
     </div>
 
-    <button>Show Next</button>
-
-    <div v-if="beerList.length" v-observe-visibility="handleScrolledToBottom"></div>
+    <button 
+      v-if="isButtonVisible" 
+      v-on:click="loadMoreBeer"
+    >
+      Show Next
+    </button>
   </div>
 </template>
 
@@ -22,8 +26,9 @@ export default {
 
   data() {
     return {
-      url: "https://api.punkapi.com/v2/beers?page=1&limit=25",
-      beerList: null,
+      page: 1,
+      beerList: [],
+      isButtonVisible: true
     }
   },
 
@@ -35,14 +40,20 @@ export default {
 
   methods: {
     async loadBeerList() {
-      const res = await fetch(this.url)
+      const res = await fetch(`https://api.punkapi.com/v2/beers?page=${this.page}&limit=25`)
       const result = await res.json()
-      this.beerList = result
+      result.map((obj) => {
+        this.beerList.push(obj)
+      })
       console.log(this.beerList)
     },
 
-    handleScrolledToBottom() {
-      console.log("asd")
+    loadMoreBeer() {
+      this.page++
+      this.loadBeerList() 
+      if (this.page === 13) {
+        this.isButtonVisible = false
+      } 
     }
   }
 }
