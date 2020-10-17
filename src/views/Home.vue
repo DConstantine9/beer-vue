@@ -1,11 +1,12 @@
 <template>
   <div>
     <div 
-      v-for="(beer, i) in beerList" 
-      v-bind:key="i"
+      v-for="beer in beerList" 
+      v-bind:key="beer.id"
       class="beer-box"
     >
-      <h2>{{i+1}} {{beer.name}}</h2> <br>
+      <h2>{{beer.id}} {{beer.name}}</h2> 
+      <button v-on:click="deleteBeer">delete</button> <br>
       <img :src="beer.image_url" alt="oops">
       <div>description: {{beer.description}}</div> <br>
       <div>brewers tips: {{beer.brewers_tips}} </div> 
@@ -54,6 +55,13 @@ export default {
       if (this.page === 13) {
         this.isButtonVisible = false
       } 
+    },
+
+    deleteBeer(id) {
+      /* this.beerList = this.beerList.filter(b => b.id !== id) */
+      let arr = this.beerList
+      arr.splice(id, 1)
+      this.beerList = arr 
     }
   }
 }
