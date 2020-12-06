@@ -1,27 +1,26 @@
 <template>
   <div>
-    <div 
-      v-for="beer in beerList" 
+    <BeerItem 
+      v-for="(beer, i) in beerList" 
+      v-bind:beer="beer"
+      v-bind:i="i"
       v-bind:key="beer.id"
+      v-on:remove-beer="removeBeer"
       class="beer-box"
-    >
-      <h2>{{beer.id}} {{beer.name}}</h2> 
-      <button v-on:click="deleteBeer">delete</button> <br>
-      <img :src="beer.image_url" alt="oops">
-      <div>description: {{beer.description}}</div> <br>
-      <div>brewers tips: {{beer.brewers_tips}} </div> 
-    </div>
-
+    />
+    
     <button 
       v-if="isButtonVisible" 
       v-on:click="loadMoreBeer"
     >
-      Show Next
+      {{buttonContent}}
     </button>
   </div>
 </template>
 
 <script>
+import BeerItem from "@/components/beerItem"
+
 export default {
   name: 'Home',
 
@@ -29,11 +28,14 @@ export default {
     return {
       page: 1,
       beerList: [],
-      isButtonVisible: true
+      isButtonVisible: true,
+      buttonContent: "Show Next"
     }
   },
 
-  components: {},
+  components: {
+    BeerItem
+  },
 
   mounted() {
     this.loadBeerList()
@@ -41,7 +43,10 @@ export default {
 
   methods: {
     async loadBeerList() {
+      this.buttonContent = "loading"
+      console.log(this.buttonContent)
       const res = await fetch(`https://api.punkapi.com/v2/beers?page=${this.page}&limit=25`)
+      .then(this.buttonContent = "Show Next")
       const result = await res.json()
       result.map((obj) => {
         this.beerList.push(obj)
@@ -57,25 +62,14 @@ export default {
       } 
     },
 
-    deleteBeer(id) {
-      /* this.beerList = this.beerList.filter(b => b.id !== id) */
-      let arr = this.beerList
-      arr.splice(id, 1)
-      this.beerList = arr 
+    removeBeer(id) {
+      console.log(id)
+      this.beerList = this.beerList.filter(b => b.id !== id)
     }
   }
 }
 </script>
 
 <style scoped>
-
-/* .beer-box {
-  display: flex;
-
-} */
-
-img {
-  height: 300px;
-}
 
 </style>
