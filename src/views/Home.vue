@@ -1,13 +1,14 @@
 <template>
-  <div>
+<div>
+  <div class='container'>
     <BeerItem 
       v-for="(beer, i) in beerList" 
       v-bind:beer="beer"
       v-bind:i="i"
       v-bind:key="beer.id"
       v-on:remove-beer="removeBeer"
-      class="beer-box"
     />
+  </div>
     
     <button 
       v-if="isButtonVisible" 
@@ -45,9 +46,11 @@ export default {
     async loadBeerList() {
       this.buttonContent = "loading"
       console.log(this.buttonContent)
+
       const res = await fetch(`https://api.punkapi.com/v2/beers?page=${this.page}&limit=25`)
       .then(this.buttonContent = "Show Next")
       const result = await res.json()
+
       result.map((obj) => {
         this.beerList.push(obj)
       })
@@ -63,7 +66,6 @@ export default {
     },
 
     removeBeer(id) {
-      console.log(id)
       this.beerList = this.beerList.filter(b => b.id !== id)
     }
   }
@@ -71,5 +73,11 @@ export default {
 </script>
 
 <style scoped>
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 500%
+}
 
 </style>

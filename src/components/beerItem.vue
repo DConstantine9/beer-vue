@@ -1,20 +1,21 @@
 <template>
   <div class="beer-box">
     <div class="box-header">
-      <h2 v-if="edit === false">{{i + 1}}. {{beerName}}</h2> 
+      <div v-if="edit === false" class="normalMode">
+        <h2 >{{i + 1}}. {{beerName}}</h2> 
+        <button v-on:click="editBeer">edit</button>
+      </div>
       <div v-else>
-        <input ref="input" :value="beer.name"> 
+        <input v-model="beerName" >
         <button v-on:click="saveBeer">save</button>
       </div>
-      <div class="buttons">
-        <button v-on:click="editBeer">edit</button>
-        <button v-on:click="$emit('remove-beer', beer.id)">delete</button>
-      </div>
+      <button v-on:click="$emit('remove-beer', beer.id)">delete</button>
     </div>
     <div class="box-content">
       <img :src="beer.image_url" alt="oops">
       <div class="text">
-        <div><b>description:</b> {{beer.description}}</div> <br>
+        <div v-if="edit === false"><b>description:</b> {{beerDescription}}</div>
+        <textarea v-else v-model="beerDescription"></textarea> <br>
         <div><b>brewers tips:</b> {{beer.brewers_tips}}</div> 
       </div>
     </div>
@@ -27,6 +28,7 @@ export default {
     return {
       edit: false,
       beerName: this.beer.name,
+      beerDescription: this.beer.description
     }
   },
 
@@ -44,7 +46,6 @@ export default {
     },
 
     saveBeer() {
-      this.beerName = this.$refs.input.value
       this.edit = false
     }
   }
@@ -76,6 +77,13 @@ h2 {
   margin-bottom: 15px;
 }
 
+.normalMode {
+  display: flex;
+  align-items: center;
+  width: inherit;
+  justify-content: space-between;
+}
+
 .box-content {
   display: flex;
 }
@@ -83,11 +91,20 @@ h2 {
 .box-content .text {
   margin-left: 15px;
   text-align: left;
+  display: flex;
+  flex-direction: column;
 }
 
 img {
   height: 300px;
+}
 
+textarea {
+  width: inherit;
+  height: 120px;
+  resize: none;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px
 }
 
 </style>
