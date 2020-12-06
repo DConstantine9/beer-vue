@@ -1,6 +1,5 @@
 <template>
-<div>
-  <div class='container'>
+  <div>
     <BeerItem 
       v-for="(beer, i) in beerList" 
       v-bind:beer="beer"
@@ -8,7 +7,6 @@
       v-bind:key="beer.id"
       v-on:remove-beer="removeBeer"
     />
-  </div>
     
     <button 
       v-if="isButtonVisible" 
@@ -71,13 +69,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 500%
-}
-
-</style>
